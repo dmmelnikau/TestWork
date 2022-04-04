@@ -10,6 +10,8 @@ using TestWork.Data;
 using TestWork.Models;
 using System.IO;
 using TestWork.Models.ViewModel;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TestWork.Controllers
 {
@@ -17,11 +19,13 @@ namespace TestWork.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly UserManager<User> _userManager;
 
-        public NewsController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
+        public NewsController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment, UserManager<User> userManager)
         {
             _context = context;
             _hostEnvironment = hostEnvironment;
+            _userManager = userManager;
         }
 
         // GET: News
@@ -29,7 +33,7 @@ namespace TestWork.Controllers
         {
             int pageSize = 6;   // количество элементов на странице
 
-            IQueryable<News> source = _context.News;//.Include(x => x.Company);
+            IQueryable<News> source = _context.News;
             var count = await source.CountAsync();
             var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
@@ -71,9 +75,11 @@ namespace TestWork.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,ImageFile,SubTitle,Text")] News news)
+        [Authorize]
+        public async Task<IActionResult> Create([Bind("Id,Title,ImageFile,SubTitle,Text,UserId")] News news)
         {
-           
+            var user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+            news.UserId = user.Id;
             if (ModelState.IsValid)
             {
                 string wwwRootPath = _hostEnvironment.WebRootPath;
