@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TestWork.Data;
 using TestWork.Models;
 using System.IO;
+using TestWork.Models.ViewModel;
 
 namespace TestWork.Controllers
 {
@@ -24,9 +25,21 @@ namespace TestWork.Controllers
         }
 
         // GET: News
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            return View(await _context.News.ToListAsync());
+            int pageSize = 6;   // количество элементов на странице
+
+            IQueryable<News> source = _context.News;//.Include(x => x.Company);
+            var count = await source.CountAsync();
+            var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
+            NewsViewModel viewModel = new NewsViewModel
+            {
+                PageViewModel = pageViewModel,
+                News = items
+            };
+            return View(viewModel);
         }
 
         // GET: News/Details/5

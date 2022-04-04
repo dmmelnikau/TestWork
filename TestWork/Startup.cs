@@ -63,7 +63,7 @@ namespace TestWork
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=News}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }
