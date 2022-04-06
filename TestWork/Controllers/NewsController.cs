@@ -12,6 +12,8 @@ using System.IO;
 using TestWork.Models.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Http;
 
 namespace TestWork.Controllers
 {
@@ -27,7 +29,16 @@ namespace TestWork.Controllers
             _hostEnvironment = hostEnvironment;
             _userManager = userManager;
         }
+        public IActionResult OnGetSetCultureCookie(string cltr, string returnUrl)
+        {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(cltr)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
 
+            return LocalRedirect(returnUrl);
+        }
         // GET: News
         public async Task<IActionResult> Index(int page = 1)
         {

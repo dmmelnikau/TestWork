@@ -6,7 +6,19 @@ a.navbar-brand {
   text-align: center;
   word-break: break-all;
 }
+.bg-image-vertical {
+    position: relative;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: auto 100%;
+}
 
+@media (min-width: 1025px) {
+    .h-custom-2 {
+        height: 100%;
+    }
+}
 /* Provide sufficient contrast against white background */
 a {
   color: #0366d6;

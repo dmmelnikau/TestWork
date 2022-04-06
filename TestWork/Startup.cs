@@ -13,6 +13,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using TestWork.Data;
 using TestWork.Models;
+using LazZiya.ExpressLocalization;
+using System.Globalization;
+using TestWork.LocalizationResources;
+using Microsoft.AspNetCore.Localization;
 
 namespace TestWork
 {
@@ -33,10 +37,34 @@ namespace TestWork
                     Configuration.GetConnectionString("NewsConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<User>(options =>
+            {
+                options.Password.RequiredLength = 10;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddControllersWithViews();
-        }
+            var cultures = new[]
+           {
+                new CultureInfo("en"),
+               // new CultureInfo("ru"), 
+                new CultureInfo("ko"),
+
+            };
+            services.AddRazorPages().AddExpressLocalization<ExpressLocalizationResource, ViewLocalizationResource>(ops =>
+            {
+                ops.ResourcesPath = "LocalizationResources";
+                ops.RequestLocalizationOptions = o =>
+                {
+                    o.SupportedCultures = cultures;
+                    o.SupportedUICultures = cultures;
+                    o.DefaultRequestCulture = new RequestCulture("en");
+                };
+            });
+           
+             }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -59,7 +87,7 @@ namespace TestWork
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseRequestLocalization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
