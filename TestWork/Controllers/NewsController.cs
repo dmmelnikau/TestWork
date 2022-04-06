@@ -42,7 +42,7 @@ namespace TestWork.Controllers
         // GET: News
         public async Task<IActionResult> Index(int page = 1)
         {
-            int pageSize = 6;   // количество элементов на странице
+            int pageSize = 3;   // количество элементов на странице
 
             IQueryable<News> source = _context.News;
             var count = await source.CountAsync();
