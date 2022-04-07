@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace TestWork.Controllers
 {
+    [Authorize]
     public class NewsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -29,11 +30,12 @@ namespace TestWork.Controllers
             _hostEnvironment = hostEnvironment;
             _userManager = userManager;
         }
-        public IActionResult OnGetSetCultureCookie(string cltr, string returnUrl)
+        [HttpPost]
+        public IActionResult SetLanguage(string culture, string returnUrl)
         {
             Response.Cookies.Append(
                 CookieRequestCultureProvider.DefaultCookieName,
-                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(cltr)),
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
                 new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
             );
 
@@ -56,7 +58,7 @@ namespace TestWork.Controllers
             };
             return View(viewModel);
         }
-
+        [AllowAnonymous]
         // GET: News/Details/5
         public async Task<IActionResult> Details(int? id)
         {

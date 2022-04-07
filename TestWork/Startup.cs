@@ -15,7 +15,6 @@ using TestWork.Data;
 using TestWork.Models;
 using LazZiya.ExpressLocalization;
 using System.Globalization;
-using TestWork.LocalizationResources;
 using Microsoft.AspNetCore.Localization;
 
 namespace TestWork
@@ -36,6 +35,10 @@ namespace TestWork
                 options.UseSqlServer(
                     Configuration.GetConnectionString("NewsConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddControllersWithViews()
+                .AddDataAnnotationsLocalization()
+                .AddViewLocalization();
 
             services.AddDefaultIdentity<User>(options =>
             {
@@ -46,25 +49,20 @@ namespace TestWork
                 options.Password.RequireDigit = false;
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            var cultures = new[]
-           {
-                new CultureInfo("en"),
-               // new CultureInfo("ru"), 
-                new CultureInfo("ko"),
-
-            };
-            services.AddRazorPages().AddExpressLocalization<ExpressLocalizationResource, ViewLocalizationResource>(ops =>
+            services.Configure<RequestLocalizationOptions>(options =>
             {
-                ops.ResourcesPath = "LocalizationResources";
-                ops.RequestLocalizationOptions = o =>
+                var supportedCultures = new[]
                 {
-                    o.SupportedCultures = cultures;
-                    o.SupportedUICultures = cultures;
-                    o.DefaultRequestCulture = new RequestCulture("en");
+                   
+                    new CultureInfo("ru"),
+                     new CultureInfo("en")
                 };
+
+                options.DefaultRequestCulture = new RequestCulture("ru");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
             });
-           
-             }
+        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

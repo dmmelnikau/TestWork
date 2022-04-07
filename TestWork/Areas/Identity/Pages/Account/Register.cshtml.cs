@@ -46,7 +46,7 @@ namespace TestWork.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
+            [Required(ErrorMessage = "Field Email is empty")]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }

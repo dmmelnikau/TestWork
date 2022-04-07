@@ -1,45 +1,43 @@
 ﻿@model IEnumerable<TestWork.Models.News>
+@using Microsoft.AspNetCore.Mvc.Localization
 
-    @{
-        ViewData["Title"] = "Index";
-    }
-    <table class="table">
-        <thead>
+@inject IViewLocalizer Localizer
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+              @Localizer["Title"]
+            </th>
+            <th>
+               @Localizer["Image"]
+            </th>
+            <th>
+               @Localizer["SubTitle"]
+            </th>
+            
+           
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ImageName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.SubTitle)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Text)
-                </th>
-                <th></th>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    <img src="@("~/image/"+item.ImageName)" asp-append-version="true" width="100px" height="50px" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubTitle)
+                    <a asp-action="Details" class="btn btn-info" asp-route-id="@item.Id" asp-controller="News">@Localizer["Detailed"]</a>
+
+                </td>
+              
+
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        <img src="@("~/image/"+item.ImageName)" asp-append-version="true" width="100px" height="50px" />
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SubTitle)
-                    </td>
-                    <td>
-                        <a asp-action="Details" class="btn btn-info" asp-route-id="@item.Id" asp-controller="News">Detailed</a>
-                    </td>
-                  
-                </tr>
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
 
