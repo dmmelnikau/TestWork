@@ -1,19 +1,16 @@
-﻿@model IEnumerable<TestWork.Models.News>
-@using Microsoft.AspNetCore.Mvc.Localization
-
-@inject IViewLocalizer Localizer
+﻿@model IEnumerable<TestWork.Models.Advertisement>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-              @Localizer["Title"]
+              Заголовок
             </th>
             <th>
-               @Localizer["Image"]
+               Фото
             </th>
             <th>
-               @Localizer["SubTitle"]
+              Организация
             </th>
             
            
@@ -30,8 +27,8 @@
                     <img src="@("~/image/"+item.ImageName)" asp-append-version="true" width="100px" height="50px" />
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SubTitle)
-                    <a asp-action="Details" class="btn btn-info" asp-route-id="@item.Id" asp-controller="News">@Localizer["Detailed"]</a>
+                    @Html.DisplayFor(modelItem => item.Company)
+                    <a asp-action="Details" class="btn btn-info" asp-route-id="@item.Id" asp-controller="Advertisement">Подробнее</a>
 
                 </td>
               

@@ -9,4 +9,10 @@ namespace TestWork.Models
     public class User:IdentityUser
     {
     }
+    public enum Roles
+    {
+        Admin,
+        User,
+        Manager
+    }
 }

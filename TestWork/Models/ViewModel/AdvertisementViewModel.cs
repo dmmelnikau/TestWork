@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace TestWork.Models.ViewModel
 {
-    public class NewsViewModel
+    public class AdvertisementViewModel
     {
         public PageViewModel PageViewModel { get; set; }
-        public IEnumerable<News> News { get; set; }
+        public IEnumerable<Advertisement> Advertisements { get; set; }
     }
 }

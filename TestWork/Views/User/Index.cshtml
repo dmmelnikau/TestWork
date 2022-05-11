@@ -1,0 +1,30 @@
+﻿@model IEnumerable<TestWork.Models.User>
+@{
+    ViewBag.Title = "Список пользователей";
+}
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+        </p>
+    </div>
+</form>
+<table class="table">
+    <tr><th>Email</th><th></th></tr>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.Email</td>
+            <td>@user.</td>
+            <td>
+                <form asp-action="Delete" asp-route-id="@user.Id" method="post">
+
+                    <button type="submit" class="btn btn-sm btn-danger">
+                        Удалить
+                    </button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>

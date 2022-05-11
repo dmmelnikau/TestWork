@@ -33,22 +33,20 @@ namespace TestWork
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("NewsConnection")));
+                    Configuration.GetConnectionString("AdvConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddControllersWithViews()
                 .AddDataAnnotationsLocalization()
                 .AddViewLocalization();
-
+         
             services.AddDefaultIdentity<User>(options =>
             {
-                options.Password.RequiredLength = 10;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireDigit = false;
+                options.SignIn.RequireConfirmedAccount = false;
             })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+               .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+             
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 var supportedCultures = new[]
@@ -90,7 +88,7 @@ namespace TestWork
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=News}/{action=Index}/{id?}");
+                    pattern: "{controller=Advertisement}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }

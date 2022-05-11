@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace TestWork.Models
 {
-    public class News
+    public class Advertisement
     {
         [Key]
         public int Id { get; set; }
@@ -23,10 +23,10 @@ namespace TestWork.Models
         [NotMapped]
         public IFormFile ImageFile { get; set; }
         [Column(TypeName = "nvarchar(50)")]
-        [Required(ErrorMessage = "Field Subtitle is empty")]
+        [Required(ErrorMessage = "Field Company is empty")]
         [StringLength(50, ErrorMessage = "More than 50 characters entered in a field Subtitle")]
-        [DisplayName("SubTitle")]
-        public string SubTitle { get; set; }
+        [DisplayName("Company")]
+        public string Company { get; set; }
         [Required(ErrorMessage = "Field TextNews is empty")]
         [DisplayName("TextNews")]
         [Column(TypeName = "nvarchar(250)")]

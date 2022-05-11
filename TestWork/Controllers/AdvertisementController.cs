@@ -14,17 +14,18 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Http;
+using PusherServer;
 
 namespace TestWork.Controllers
 {
     [Authorize]
-    public class NewsController : Controller
+    public class AdvertisementController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _hostEnvironment;
         private readonly UserManager<User> _userManager;
 
-        public NewsController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment, UserManager<User> userManager)
+        public AdvertisementController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment, UserManager<User> userManager)
         {
             _context = context;
             _hostEnvironment = hostEnvironment;
@@ -46,15 +47,15 @@ namespace TestWork.Controllers
         {
             int pageSize = 3;   // количество элементов на странице
 
-            IQueryable<News> source = _context.News;
+            IQueryable<Advertisement> source = _context.Advertisements;
             var count = await source.CountAsync();
             var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
-            NewsViewModel viewModel = new NewsViewModel
+            AdvertisementViewModel viewModel = new AdvertisementViewModel
             {
                 PageViewModel = pageViewModel,
-                News = items
+                Advertisements = items
             };
             return View(viewModel);
         }
@@ -67,14 +68,41 @@ namespace TestWork.Controllers
                 return NotFound();
             }
 
-            var news = await _context.News
+            var advertisement = await _context.Advertisements
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (news == null)
+            if (advertisement == null)
             {
                 return NotFound();
             }
+            var visitors = 0;
 
-            return View(news);
+            if (System.IO.File.Exists("visitors.txt"))
+            {
+                string noOfVisitors = System.IO.File.ReadAllText("visitors.txt");
+                visitors = Int32.Parse(noOfVisitors);
+            }
+
+            ++visitors;
+            var visit_text = (visitors == 1) ? " просмотр" : " просмотров";
+
+            System.IO.File.WriteAllText("visitors.txt", visitors.ToString());
+
+            var options = new PusherOptions();
+            options.Cluster = "PUSHER_APP_CLUSTER";
+
+            var pusher = new Pusher(
+            "PUSHER_APP_ID",
+            "PUSHER_APP_KEY",
+            "PUSHER_APP_SECRET", options);
+
+            pusher.TriggerAsync(
+            "general",
+            "newVisit",
+            new { visits = visitors.ToString(), message = visit_text });
+
+            ViewData["visitors"] = visitors;
+            ViewData["visitors_txt"] = visit_text;
+            return View(advertisement);
         }
 
         // GET: News/Create
@@ -89,26 +117,26 @@ namespace TestWork.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Id,Title,ImageFile,SubTitle,Text,UserId")] News news)
+        public async Task<IActionResult> Create([Bind("Id,Title,ImageFile,Company,Text,UserId")] Advertisement advertisement)
         {
             var user = _userManager.FindByNameAsync(User.Identity.Name).Result;
-            news.UserId = user.Id;
+            advertisement.UserId = user.Id;
             if (ModelState.IsValid)
             {
                 string wwwRootPath = _hostEnvironment.WebRootPath;
-                string fileName = Path.GetFileNameWithoutExtension(news.ImageFile.FileName);
-                string extension = Path.GetExtension(news.ImageFile.FileName);
-                news.ImageName = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                string fileName = Path.GetFileNameWithoutExtension(advertisement.ImageFile.FileName);
+                string extension = Path.GetExtension(advertisement.ImageFile.FileName);
+                advertisement.ImageName = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
                 string path = Path.Combine(wwwRootPath + "/Image/", fileName);
                 using (var fileStream = new FileStream(path, FileMode.Create))
                 {
-                    await news.ImageFile.CopyToAsync(fileStream);
+                    await advertisement.ImageFile.CopyToAsync(fileStream);
                 }
-                _context.Add(news);
+                _context.Add(advertisement);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(news);
+            return View(advertisement);
         }
 
         // GET: News/Edit/5
@@ -119,12 +147,12 @@ namespace TestWork.Controllers
                 return NotFound();
             }
 
-            var news = await _context.News.FindAsync(id);
-            if (news == null)
+            var advertisements = await _context.Advertisements.FindAsync(id);
+            if (advertisements == null)
             {
                 return NotFound();
             }
-            return View(news);
+            return View(advertisements);
         }
 
         // POST: News/Edit/5
@@ -132,9 +160,9 @@ namespace TestWork.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ImageName,SubTitle,Text")] News news)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ImageFile,Company,Text")] Advertisement advertisement)
         {
-            if (id != news.Id)
+            if (id != advertisement.Id)
             {
                 return NotFound();
             }
@@ -143,12 +171,21 @@ namespace TestWork.Controllers
             {
                 try
                 {
-                    _context.Update(news);
+                    string wwwRootPath = _hostEnvironment.WebRootPath;
+                    string fileName = Path.GetFileNameWithoutExtension(advertisement.ImageFile.FileName);
+                    string extension = Path.GetExtension(advertisement.ImageFile.FileName);
+                    advertisement.ImageName = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                    string path = Path.Combine(wwwRootPath + "/Image/", fileName);
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await advertisement.ImageFile.CopyToAsync(fileStream);
+                    }
+                    _context.Update(advertisement);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!NewsExists(news.Id))
+                    if (!AdvsExists(advertisement.Id))
                     {
                         return NotFound();
                     }
@@ -159,7 +196,7 @@ namespace TestWork.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(news);
+            return View(advertisement);
         }
 
         // GET: News/Delete/5
@@ -170,14 +207,14 @@ namespace TestWork.Controllers
                 return NotFound();
             }
 
-            var news = await _context.News
+            var advertisements = await _context.Advertisements
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (news == null)
+            if (advertisements == null)
             {
                 return NotFound();
             }
 
-            return View(news);
+            return View(advertisements);
         }
 
         // POST: News/Delete/5
@@ -185,18 +222,18 @@ namespace TestWork.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var news = await _context.News.FindAsync(id);
-            var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "image", news.ImageName);
+            var advertisement = await _context.Advertisements.FindAsync(id);
+            var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "image", advertisement.ImageName);
             if (System.IO.File.Exists(imagePath))
                 System.IO.File.Delete(imagePath);
-            _context.News.Remove(news);
+            _context.Advertisements.Remove(advertisement);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool NewsExists(int id)
+        private bool AdvsExists(int id)
         {
-            return _context.News.Any(e => e.Id == id);
+            return _context.Advertisements.Any(e => e.Id == id);
         }
     }
 }

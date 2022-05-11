@@ -1,27 +1,21 @@
-﻿@model TestWork.Models.News
+﻿@model TestWork.Models.Advertisement
 
-@using Microsoft.AspNetCore.Mvc.Localization
-
-@inject IViewLocalizer Localizer
 <dl class="card-body p-4 text-center">
-
     <dd class="col-sm-10">
         @Html.DisplayFor(model => model.Title)
     </dd>
-
     <dd class="col-sm-10">
-        @Html.DisplayFor(model => model.SubTitle)
+        @Html.DisplayFor(model => model.Company)
     </dd>
-
     <dd class="col-sm-10">
         <img src="@("~/image/"+Model.ImageName)" asp-append-version="true" width="350px" height="350px" />
     </dd>
-
     <dd class="col-sm-10">
         @Html.DisplayFor(model => model.Text)
     </dd>
 </dl>
-
-<div>
-    <a asp-action="Index" class="btn btn-warning w-100">@Localizer["Back to List"]</a>
-</div>
+<form asp-action="Delete" >
+    <input type="hidden" asp-for="Id" />
+    <input type="submit" value="Delete" class="btn btn-danger w-100" />
+    <a asp-action="Index" class="btn btn-warning w-100">Back to List</a>
+</form>
