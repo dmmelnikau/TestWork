@@ -104,6 +104,7 @@ namespace TestWork.Controllers
             ViewData["visitors_txt"] = visit_text;
             return View(advertisement);
         }
+       
 
         // GET: News/Create
         public IActionResult Create()

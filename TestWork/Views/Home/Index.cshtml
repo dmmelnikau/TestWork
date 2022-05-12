@@ -4,37 +4,110 @@
     <thead>
         <tr>
             <th>
-              Заголовок
+                Заголовок
             </th>
             <th>
-               Фото
+                Фото
             </th>
             <th>
-              Организация
+                Организация
             </th>
-            
-           
+
+            <th>
+               Нравится
+            </th>
+            <th>
+                Не нравится
+            </th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="tbody1">
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    <img src="@("~/image/"+item.ImageName)" asp-append-version="true" width="100px" height="50px" />
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Company)
-                    <a asp-action="Details" class="btn btn-info" asp-route-id="@item.Id" asp-controller="Advertisement">Подробнее</a>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                <img src="@("~/image/"+item.ImageName)" asp-append-version="true" width="100px" height="50px" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Company)
+                <a asp-action="Details" class="btn btn-info" asp-route-id="@item.Id" asp-controller="Advertisement">Подробнее</a>
 
-                </td>
-              
-
-            </tr>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Likes)
+                <button class="btn btn-block btn-primary" onclick="Edit(@item.Id,true)">Like</button>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dislikes)
+                <button class="btn btn-block btn-secondary"  onclick="Edit(@item.Id,false)">Dislike</button>
+            </td>         
+        </tr>
         }
     </tbody>
 </table>
+ <script>
+     function Edit(id, like) {
+         $.ajax({
+             type: "POST",
+             data: { id: id, like: like },
+             url: 'Home/Edit',
+         }).done(function (result) {
+             var html = ""
+             for (var i = 0; i < result.length; i++) {
+                 html += '<tr><td>' + result[i].title + '</td><td>' + result[i].imageName + '</td><td>' + result[i].company + '</td><td>' + result[i].likes + '</td><td>' + result[i].dislikes + '</td><td><button class="btn btn-block btn-primary" onclick="Edit(' + result[i].id + ',true)">Like</button><button  class="btn btn-block btn-secondary" onclick="Edit(' + result[i].id + ',false)">Dislike</button></td></tr>'
+             }
+             document.getElementById("tbody1").innerHTML = html;
+         });
+     }
+ </script>
+<style>
+    .btn-primary {
+        margin: 10px;
+        font-size: 28px;
+        width: 100px;
+        height: 50px;
+        padding: 5px;
+        background: #0055ff;
+        color: #fff;
+        outline: none;
+        border-radius: 4px;
+        border: 1px solid transparent;
+        transition: 0.5s;
+    }
 
+        .btn-primary:hover {
+            background: #0055dd;
+            color: #fff;
+            transition: 0.5s;
+        }
+
+        .btn-primary:focus {
+            box-shadow: 0 0 0 5px rgba(0, 85, 255, 0.5)
+        }
+    .btn-secondary {
+        margin: 10px;
+        font-size: 28px;
+        width: 100px;
+        height: 50px;
+        padding: 5px;
+        background: #808080;
+        color: #fff;
+        outline: none;
+        border-radius: 4px;
+        border: 1px solid transparent;
+        transition: 0.5s;
+    }
+
+        .btn-secondary:hover {
+            background: #ff0000;
+            color: #fff;
+            transition: 0.5s;
+        }
+
+        .btn-secondary:focus {
+            box-shadow: 0 0 0 5px rgba(0, 85, 255, 0.5)
+        }
+</style>

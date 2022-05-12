@@ -26,7 +26,23 @@ namespace TestWork.Controllers
             return View(await _context.Advertisements.ToListAsync());
         }
 
- 
+        
+        public async Task<List<Advertisement>> Edit(int id, bool like)
+        {
+            var advertisement = await _context.Advertisements.FindAsync(id);
+            if (like)
+            {
+                advertisement.Likes++;
+            }
+            else
+            {
+                advertisement.Dislikes++;
+            }
+            _context.Update(advertisement);
+            await _context.SaveChangesAsync();
+            return  _context.Advertisements.ToList();
+
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

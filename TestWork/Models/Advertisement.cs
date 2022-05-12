@@ -32,6 +32,9 @@ namespace TestWork.Models
         [Column(TypeName = "nvarchar(250)")]
         [StringLength(250, ErrorMessage = "More than 250 characters entered in a field TextNews")]
         public string Text { get; set; }
+        public int Visits { get; set; }
+        public int Likes { get; set; }
+        public int Dislikes { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
 
