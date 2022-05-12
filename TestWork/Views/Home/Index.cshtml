@@ -1,5 +1,12 @@
 ﻿@model IEnumerable<TestWork.Models.Advertisement>
-
+<form asp-action="Index" method="get" id="first">
+    <div class="form-actions no-color">
+        <p>
+            Искать по имени компании: <input type="text" name="SearchString" value="@ViewData["AdvFilter"]" />
+            <input type="submit" value="Поиск" class="btn btn-default" /> 
+        </p>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
@@ -14,10 +21,10 @@
             </th>
 
             <th>
-               Нравится
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["LikeSortParm"]">Нравится</a>
             </th>
             <th>
-                Не нравится
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DislikeSortParm"]">Не нравится</a>
             </th>
         </tr>
     </thead>
@@ -59,7 +66,8 @@
              for (var i = 0; i < result.length; i++) {
                  html += '<tr><td>' + result[i].title + '</td><td>' + result[i].imageName + '</td><td>' + result[i].company + '</td><td>' + result[i].likes + '</td><td>' + result[i].dislikes + '</td><td><button class="btn btn-block btn-primary" onclick="Edit(' + result[i].id + ',true)">Like</button><button  class="btn btn-block btn-secondary" onclick="Edit(' + result[i].id + ',false)">Dislike</button></td></tr>'
              }
-             document.getElementById("tbody1").innerHTML = html;
+            // document.getElementById("first").innerHTML ;
+             window.location.reload();
          });
      }
  </script>
@@ -110,4 +118,8 @@
         .btn-secondary:focus {
             box-shadow: 0 0 0 5px rgba(0, 85, 255, 0.5)
         }
+     a{
+         color:#fff;
+
+     }
 </style>
