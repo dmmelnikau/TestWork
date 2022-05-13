@@ -99,9 +99,12 @@ namespace TestWork.Controllers
             "general",
             "newVisit",
             new { visits = visitors.ToString(), message = visit_text });
-
-            ViewData["visitors"] = visitors;
+            advertisement.Visits = visitors;
+            ViewData["visitors"] = advertisement.Visits;
             ViewData["visitors_txt"] = visit_text;
+            advertisement.ERR = (double)((advertisement.Dislikes + advertisement.Likes) * 100 / advertisement.Visits);
+            _context.Update(advertisement);
+            await _context.SaveChangesAsync();
             return View(advertisement);
         }
        
@@ -133,6 +136,7 @@ namespace TestWork.Controllers
                 {
                     await advertisement.ImageFile.CopyToAsync(fileStream);
                 }
+
                 _context.Add(advertisement);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

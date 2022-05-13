@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestWork.Data;
 
 namespace TestWork.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220513150404_errs")]
+    partial class errs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,9 +171,6 @@ namespace TestWork.Migrations
                     b.Property<int>("Dislikes")
                         .HasColumnType("int");
 
-                    b.Property<double>("ERR")
-                        .HasColumnType("float");
-
                     b.Property<string>("ImageName")
                         .HasColumnType("nvarchar(max)");
 
@@ -199,6 +198,24 @@ namespace TestWork.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Advertisements");
+                });
+
+            modelBuilder.Entity("TestWork.Models.Err", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("AvarageERR")
+                        .HasColumnType("float");
+
+                    b.Property<double>("ERR")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Errs");
                 });
 
             modelBuilder.Entity("TestWork.Models.User", b =>

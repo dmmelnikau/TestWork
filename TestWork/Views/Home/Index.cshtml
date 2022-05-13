@@ -1,9 +1,19 @@
 ﻿@model IEnumerable<TestWork.Models.Advertisement>
-<form asp-action="Index" method="get" id="first">
+<form asp-action="Index" method="get">
+    <p>
+        Реклама с большим количеством лайков чем: <input type="number" name="LikeFilter" value="@ViewData["LikeFilter"]" />|
+        Реклама с меньшим количеством дизлайков чем: <input type="number" name="DislikeFilter" value="@ViewData["DislikeFilter"]" />
+        <input type="submit" value="Фильтр" class="btn btn-default" />
+
+    </p>
     <div class="form-actions no-color">
         <p>
             Искать по имени компании: <input type="text" name="SearchString" value="@ViewData["AdvFilter"]" />
-            <input type="submit" value="Поиск" class="btn btn-default" /> 
+            <input type="submit" value="Поиск" class="btn btn-default" />
+
+        </p>
+        <p>
+            <a asp-action="Index" class="btn btn-outline-light w-100">Назад к списку</a>
         </p>
     </div>
 </form>

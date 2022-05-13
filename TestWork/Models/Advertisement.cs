@@ -35,6 +35,7 @@ namespace TestWork.Models
         public int Visits { get; set; }
         public int Likes { get; set; }
         public int Dislikes { get; set; }
+        public double ERR { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
 

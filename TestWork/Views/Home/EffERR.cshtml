@@ -1,0 +1,93 @@
+﻿@model IEnumerable<TestWork.Models.Advertisement>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Заголовок
+            </th>
+            <th>
+                Фото
+            </th>
+            <th>
+                Организация
+            </th>
+            <th>
+                ERR-показатель
+            </th>
+        </tr>
+    </thead>
+    <tbody id="tbody1">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    <img src="@("~/image/"+item.ImageName)" asp-append-version="true" width="100px" height="50px" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Company)
+                    <a asp-action="Details" class="btn btn-info" asp-route-id="@item.Id" asp-controller="Advertisement">Подробнее</a>
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ERR)                  
+                </td>            
+            </tr>
+        }
+    </tbody>
+</table>
+<style>
+    .btn-primary {
+        margin: 10px;
+        font-size: 28px;
+        width: 100px;
+        height: 50px;
+        padding: 5px;
+        background: #0055ff;
+        color: #fff;
+        outline: none;
+        border-radius: 4px;
+        border: 1px solid transparent;
+        transition: 0.5s;
+    }
+
+        .btn-primary:hover {
+            background: #0055dd;
+            color: #fff;
+            transition: 0.5s;
+        }
+
+        .btn-primary:focus {
+            box-shadow: 0 0 0 5px rgba(0, 85, 255, 0.5)
+        }
+
+    .btn-secondary {
+        margin: 10px;
+        font-size: 28px;
+        width: 100px;
+        height: 50px;
+        padding: 5px;
+        background: #808080;
+        color: #fff;
+        outline: none;
+        border-radius: 4px;
+        border: 1px solid transparent;
+        transition: 0.5s;
+    }
+
+        .btn-secondary:hover {
+            background: #ff0000;
+            color: #fff;
+            transition: 0.5s;
+        }
+
+        .btn-secondary:focus {
+            box-shadow: 0 0 0 5px rgba(0, 85, 255, 0.5)
+        }
+
+    a {
+        color: #fff;
+    }
+</style>

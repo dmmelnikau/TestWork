@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestWork.Data;
 
 namespace TestWork.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220513160022_ERR")]
+    partial class ERR
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,8 +171,8 @@ namespace TestWork.Migrations
                     b.Property<int>("Dislikes")
                         .HasColumnType("int");
 
-                    b.Property<double>("ERR")
-                        .HasColumnType("float");
+                    b.Property<int>("ERR")
+                        .HasColumnType("int");
 
                     b.Property<string>("ImageName")
                         .HasColumnType("nvarchar(max)");

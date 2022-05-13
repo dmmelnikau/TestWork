@@ -14,5 +14,6 @@ namespace TestWork.Data
         {
         }
         public DbSet<Advertisement> Advertisements { get; set; }
+        
     }
 }

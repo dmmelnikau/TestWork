@@ -20,15 +20,38 @@ namespace TestWork.Controllers
             _logger = logger;
             _context = context;
         }
-
-        public async Task<IActionResult> Index(string searchString, string sortOrder)
+        public async Task<IActionResult> EffERR()
         {
-           
-            var advertisementContext = _context.Advertisements.AsQueryable();
+            var advertisementC = from s in _context.Advertisements
+                                select s;
+
+            
+            return View( await advertisementC.ToListAsync());
+        }
+        public async Task<IActionResult> Index(string searchString, string sortOrder, int? likefilter, int? dislikefilter)
+        {
+        
             ViewData["LikeSortParm"] = String.IsNullOrEmpty(sortOrder) ? "like_desc" : "";
             ViewData["DislikeSortParm"] = String.IsNullOrEmpty(sortOrder) ? "dislike_desc" : "dislike_order";
-            //  var students = from s in _context.AdvMark
-            //            select s;
+            ViewData["AdvFilter"] = searchString;
+            ViewData["LikeFilter"] = likefilter;
+            ViewData["DislikeFilter"] = dislikefilter;
+            var advertisementContext = from s in _context.Advertisements
+                                       select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                advertisementContext = advertisementContext.Where(s => s.Company.Contains(searchString)
+                                   //    || s.Title.Contains(searchString)
+                                       );
+            }
+            if (likefilter != null && likefilter != 0)
+            {
+                advertisementContext = advertisementContext.Where(p => p.Likes > likefilter);
+            }
+            if (dislikefilter != null && dislikefilter != 0)
+            {
+                advertisementContext = advertisementContext.Where(p => p.Dislikes < dislikefilter);
+            }
             switch (sortOrder)
             {
                 case "like_desc":
@@ -44,14 +67,8 @@ namespace TestWork.Controllers
                     advertisementContext = advertisementContext.OrderBy(s => s.Likes);
                     break;
             }
-            ViewData["AdvFilter"] = searchString;
-            advertisementContext = from s in _context.Advertisements
-                                select s;
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                advertisementContext = advertisementContext.Where(s => s.Company.Contains(searchString));
-            }
-            return View(await advertisementContext.ToListAsync());
+          
+            return View(await advertisementContext.AsNoTracking().ToListAsync());
         }
 
         

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestWork.Data;
 
 namespace TestWork.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220513153956_ekey")]
+    partial class ekey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,8 +171,8 @@ namespace TestWork.Migrations
                     b.Property<int>("Dislikes")
                         .HasColumnType("int");
 
-                    b.Property<double>("ERR")
-                        .HasColumnType("float");
+                    b.Property<int>("ErrId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ImageName")
                         .HasColumnType("nvarchar(max)");
@@ -196,9 +198,30 @@ namespace TestWork.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ErrId")
+                        .IsUnique();
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Advertisements");
+                });
+
+            modelBuilder.Entity("TestWork.Models.Err", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("AvarageERR")
+                        .HasColumnType("float");
+
+                    b.Property<double>("ERR")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Errs");
                 });
 
             modelBuilder.Entity("TestWork.Models.User", b =>
@@ -319,11 +342,24 @@ namespace TestWork.Migrations
 
             modelBuilder.Entity("TestWork.Models.Advertisement", b =>
                 {
+                    b.HasOne("TestWork.Models.Err", "Err")
+                        .WithOne("Advertisement")
+                        .HasForeignKey("TestWork.Models.Advertisement", "ErrId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TestWork.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
+                    b.Navigation("Err");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TestWork.Models.Err", b =>
+                {
+                    b.Navigation("Advertisement");
                 });
 #pragma warning restore 612, 618
         }
