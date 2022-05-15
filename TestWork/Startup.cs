@@ -16,6 +16,7 @@ using TestWork.Models;
 using LazZiya.ExpressLocalization;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+using Wkhtmltopdf.NetCore;
 
 namespace TestWork
 {
@@ -35,7 +36,7 @@ namespace TestWork
                 options.UseSqlServer(
                     Configuration.GetConnectionString("AdvConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
+         //   services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddControllersWithViews()
                 .AddDataAnnotationsLocalization()
                 .AddViewLocalization();
@@ -46,20 +47,8 @@ namespace TestWork
             })
                .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
-             
-            services.Configure<RequestLocalizationOptions>(options =>
-            {
-                var supportedCultures = new[]
-                {
-                   
-                    new CultureInfo("ru"),
-                     new CultureInfo("en")
-                };
+            services.AddWkhtmltopdf("wkhtmltopdf");
 
-                options.DefaultRequestCulture = new RequestCulture("ru");
-                options.SupportedCultures = supportedCultures;
-                options.SupportedUICultures = supportedCultures;
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

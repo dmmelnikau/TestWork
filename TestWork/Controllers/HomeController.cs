@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AspNetCore.Reporting;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Rotativa.AspNetCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TestWork.Data;
 using TestWork.Models;
+using Wkhtmltopdf.NetCore;
 
 namespace TestWork.Controllers
 {
@@ -15,12 +19,26 @@ namespace TestWork.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        readonly IGeneratePdf generatePdf;
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, IGeneratePdf generatePdf)
         {
             _logger = logger;
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
+            this.generatePdf = generatePdf;
+
+
         }
-        public async Task<IActionResult> EffERR()
+
+        public async Task<IActionResult> Print()
+        {
+            var advertisementC = _context.Advertisements.ToList();
+                                
+            
+            return await generatePdf.GetPdf("Views/Home/Print.cshtml", advertisementC);
+        }
+            public async Task<IActionResult> EffERR()
         {
             var advertisementC = from s in _context.Advertisements
                                 select s;

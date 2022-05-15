@@ -25,11 +25,12 @@ namespace TestWork.Controllers
         private readonly IWebHostEnvironment _hostEnvironment;
         private readonly UserManager<User> _userManager;
 
-        public AdvertisementController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment, UserManager<User> userManager)
+        public AdvertisementController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment,UserManager<User> userManager)
         {
             _context = context;
             _hostEnvironment = hostEnvironment;
             _userManager = userManager;
+          
         }
         [HttpPost]
         public IActionResult SetLanguage(string culture, string returnUrl)

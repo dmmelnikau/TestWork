@@ -1,0 +1,167 @@
+﻿
+@model IEnumerable<TestWork.Models.Advertisement>
+@{ Layout = null; }
+<h1><b> Отчет</b></h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th class="e3">
+                Заголовок
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th class="e3">
+                Организация
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th class="e3">
+                ERR-показатель
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+
+        </tr>
+    </thead>
+    <tbody id="tbody1">
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td class="e3">
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td colspan="48"></td>
+
+            <td class="e3">
+                @Html.DisplayFor(modelItem => item.Company)
+
+            <td colspan="47"></td>
+            <td class="e3">
+                @Html.DisplayFor(modelItem => item.ERR)
+            </td>
+
+        </tr>
+        }
+    </tbody>
+</table>
+<style>
+    h1{
+        font-size:20px;
+        font-family:'Times New Roman';
+        text-align:center;
+    }
+    .e3 {
+        font-size: 20px;
+        font-family: 'Times New Roman';
+    }
+</style>

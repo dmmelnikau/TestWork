@@ -14,6 +14,9 @@ namespace TestWork.Data
         {
         }
         public DbSet<Advertisement> Advertisements { get; set; }
-        
+       
+            //= @"Data Source=DESKTOP-26N6QAU;Initial Catalog=N-ADV-DB;Integrated Security=True";
+
     }
+
 }
