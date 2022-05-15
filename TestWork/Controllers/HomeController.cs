@@ -38,7 +38,14 @@ namespace TestWork.Controllers
             
             return await generatePdf.GetPdf("Views/Home/Print.cshtml", advertisementC);
         }
-            public async Task<IActionResult> EffERR()
+        public async Task<IActionResult> Print10()
+        {
+            var advertisementC = (from s in _context.Advertisements orderby s.Id descending
+                                 select s).Take(10);
+
+            return await generatePdf.GetPdf("Views/Home/Print10.cshtml", advertisementC);
+        }
+        public async Task<IActionResult> EffERR()
         {
             var advertisementC = from s in _context.Advertisements
                                 select s;
